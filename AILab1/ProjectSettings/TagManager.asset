@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Ally
-  - Enemy
   - SafeZone
+  - Friend
+  - Threat
   layers:
   - Default
   - TransparentFX
@@ -14,8 +14,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Targets
+  - Obstacles
   - 
   - 
   - 
