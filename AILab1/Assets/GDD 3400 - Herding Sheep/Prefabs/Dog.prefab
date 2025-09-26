@@ -96,9 +96,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2471741539017510992}
   - component: {fileID: 4807236908242575682}
+  - component: {fileID: 336607397489458319}
   m_Layer: 6
   m_Name: Dog
-  m_TagString: Untagged
+  m_TagString: Friend
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 4138906190388369890}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalPosition: {x: 0.31, y: 0, z: -5.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -132,15 +133,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e48f9857b3b40268cc78ef25ba5c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetsLayer:
+  _targetsLayer:
     serializedVersion: 2
     m_Bits: 0
-  obstaclesLayer:
+  _obstaclesLayer:
     serializedVersion: 2
     m_Bits: 0
-  friendTag: Friend
-  threatTag: Thread
-  safeZoneTag: SafeZone
+--- !u!65 &336607397489458319
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4138906190388369890}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.8082772, z: 2.0576591}
+  m_Center: {x: 0, y: 0.55410177, z: -0.05427265}
 --- !u!1 &4259236394591651595
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +292,7 @@ GameObject:
   - component: {fileID: 3459728154789781229}
   m_Layer: 6
   m_Name: Collision
-  m_TagString: Threat
+  m_TagString: Friend
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

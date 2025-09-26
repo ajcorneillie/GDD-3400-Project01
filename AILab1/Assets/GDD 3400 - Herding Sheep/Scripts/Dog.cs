@@ -43,6 +43,8 @@ namespace GDD3400.Project01
         bool startDone = false;
         Quaternion newRotation;
         Vector3 targetPosition;
+        private Transform sheepTarget;
+        bool hitSheep = true;
 
         public void Awake()
         {
@@ -54,19 +56,12 @@ namespace GDD3400.Project01
             GameObject[] safeZone = GameObject.FindGameObjectsWithTag("SafeZone");
             safeZoneRef = safeZone[0];
             targetPosition = new Vector3(maxX, transform.position.y, maxZ);
+            PickRandomPos();
         }
 
-        private void Update()
+        void Update()
         {
-            if (!_isActive) return;
-            if (startDone == true)
-            {
-                DecisionMaking();
-            }
-            else
-            {
-                Perception();
-            }
+            DecisionMaking();
         }
 
         private void Perception()
@@ -84,76 +79,55 @@ namespace GDD3400.Project01
 
         private void DecisionMaking()
         {
-            if (goLeft == true)
+            transform.position = Vector3.MoveTowards(transform.position,targetPosition,_maxSpeed * Time.deltaTime);
+            Vector3 direction = (new Vector3(targetPosition.x, transform.position.y, targetPosition.z) - transform.position);
+            Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+
+            if (hitSheep == false)
             {
-                if (transform.position.x == minX)
+                Collider[] hits = Physics.OverlapSphere(transform.position, _sightRadius);
+                foreach (Collider hit in hits)
                 {
-                    readyTurn = true;
-                    goLeft = false;
-                    newRotation = Quaternion.Euler(0f, 180f, 0f);
-                    targetPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z - moveZperTurn);
-                }
-                else
-                {
-                    transform.position = Vector3.Lerp(transform.position, targetPosition, _maxSpeed * Time.deltaTime);
+                    if (hit.CompareTag("Friend") && hit.gameObject != gameObject && hit.gameObject.transform.position.y == 0)
+                    {
+                        sheepTarget = hit.transform;
+                    }
                 }
             }
-            else if (goRight == true)
+
+
+            if (sheepTarget != null && hitSheep == false)
             {
-                if (transform.position.x == maxX)
-                {
-                    readyTurn = true;
-                    goRight = false;
-                    newRotation = Quaternion.Euler(0f, 180f, 0f);
-                    targetPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z - moveZperTurn);
-                }
-                else
-                {
-                    transform.position = Vector3.Lerp(transform.position, targetPosition, _maxSpeed * Time.deltaTime);
-                }
+                targetPosition = sheepTarget.position;
             }
-            else if (readyTurn == true)
+            else if(hitSheep == true && Vector3.Distance(transform.position, safeZoneRef.transform.position) > 1f)
             {
-                if (transform.position == targetPosition)
-                {
-                    if (transform.position.y > 0f)
-                    {
-                        goRight = true;
-                        readyTurn = false;
-                        newRotation = Quaternion.Euler(0f, 90f, 0f);
-                        targetPosition = new Vector3(transform.position.x + maxX * 2, transform.position.y, transform.position.z);
-                    }
-                    else
-                    {
-                        readyTurn = false;
-                        goLeft = true;
-                        newRotation = Quaternion.Euler(0f, -90f, 0f);
-                        targetPosition = new Vector3(transform.position.x + minX * 2, transform.position.y, transform.position.z);
-                    }
-                }
-                else
-                {
-                    if (targetPosition.z <= -24)
-                    {
-                        transform.position = Vector3.Lerp(transform.position, safeZoneRef.transform.position, _maxSpeed * Time.deltaTime);
-                    }
-                    else
-                    {
-                        transform.position = Vector3.Lerp(transform.position, targetPosition, _maxSpeed * Time.deltaTime);
-                    }
-                    
-                }             
+                targetPosition = safeZoneRef.transform.position;
+                _maxSpeed = 2f;
+            }
+            else if (Vector3.Distance(transform.position, targetPosition) < 0.5f)
+            {
+                PickRandomPos();
+                sheepTarget = null;
+                hitSheep = false;
             }
         }
 
-        /// <summary>
-        /// Make sure to use FixedUpdate for movement with physics based Rigidbody
-        /// You can optionally use FixedDeltaTime for movement calculations, but it is not required since fixedupdate is called at a fixed rate
-        /// </summary>
-        private void FixedUpdate()
+        private void PickRandomPos()
         {
-            if (!_isActive) return;
-            
+            float randX = Random.Range(minX, maxX);
+            float randZ = Random.Range(minZ, maxZ);
+
+            targetPosition = new Vector3(randX, transform.position.y, randZ);
+            _maxSpeed = 5f;
+        }
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.tag == "Friend")
+            {
+                hitSheep = true;
+            }
         }
     }
 }

@@ -275,18 +275,6 @@ namespace GDD3400.Project01
 
         public void Update()
         {
-            _levelTimer -= Time.deltaTime;
-
-            if (_levelTimer <= 0f)
-            {
-                Debug.Log("Level timer expired");
-                foreach (var sheep in _sheep)
-                {
-                    sheep.IsActive = false;
-                }
-                _dog.IsActive = false;
-            }
-
             UpdateUI();
         }
 

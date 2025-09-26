@@ -23,7 +23,6 @@ namespace GDD3400.Project01
         [SerializeField] private float _turnRate = 6f;
         [SerializeField] private float _wanderTurnRate = 2f;
         [SerializeField] private float _stoppingDistance = 2f;
-
         private string _friendTag = "Friend";
         private string _threatTag = "Threat";
         private string _safeZoneTag = "SafeZone";
@@ -63,16 +62,16 @@ namespace GDD3400.Project01
                 DoRest();
                 return;
             }
-            // Secondary Behavior: Check if the sheep has detected a threat
-            else if (ThreatDetected())
-            {
-                DoFlee();
-                return;
-            }
             // Tertiary Behavior: Check if the sheep has detected a friend
             else if (FriendDetected())
             {
                 DoFlock();
+                return;
+            }
+            // Secondary Behavior: Check if the sheep has detected a threat
+            else if (ThreatDetected())
+            {
+                DoFlee();
                 return;
             }
             // Default Behavior: Wander
